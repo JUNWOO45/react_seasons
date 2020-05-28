@@ -1,27 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 // import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log('constructor ::: ');
+
         this.state = {
             lat: null,
             lng: null,
             errorMsg: ''
         };
+    }
 
+    componentDidMount() {
+        console.log('componentDidMount ::: ');
         window.navigator.geolocation.getCurrentPosition(
-            position => {
-                console.log('position : ', position)
-                this.setState({ lat: position.coords.latitude })
-            },
-            err => {
-                console.error(err);
-                this.setState( { errorMsg: err.message });
-            }
+            position => this.setState({ lat: position.coords.latitude }),
+            err => this.setState( { errorMsg: err.message })
         )
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdate ::: ');
     }
 
     render() {
@@ -30,10 +34,15 @@ class App extends React.Component {
         }
 
         if(!this.state.errorMsg && this.state.lat) {
-            return <div>Latitude: { this.state.lat }</div>
+            return <SeasonDisplay lat={ this.state.lat }></SeasonDisplay>
         }
 
-        return <div>Loading...</div>
+        return (
+            <div>
+                <div>로딩중</div>
+                <i className="spinner loading icon"></i>
+            </div>
+        )
     }
 }
 
